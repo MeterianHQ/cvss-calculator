@@ -22,15 +22,27 @@ type CvssResult struct {
 }
 
 func main() {
-	if len(os.Args) < 2 || os.Args[1] == "--help" {
+	// If no argument or a help/version flag is provided, handle them.
+	if len(os.Args) < 2 {
 		printHelp()
+		return
+	}
+
+	// Check for --help or --version flag
+	firstArg := os.Args[1]
+	if firstArg == "--help" {
+		printHelp()
+		return
+	}
+	if firstArg == "--version" {
+		fmt.Printf("CVSS Calculator version %s\n", version)
 		return
 	}
 
 	// Process each provided vector
 	for _, vector := range os.Args[1:] {
-		// Skip the help argument if accidentally included later
-		if vector == "--help" {
+		// Skip any help or version argument if accidentally included later
+		if vector == "--help" || vector == "--version" {
 			continue
 		}
 
@@ -61,9 +73,12 @@ func main() {
 
 func printHelp() {
 	progName := os.Args[0]
-	helpText := fmt.Sprintf(`CVSS Calculator version %s\n, produces a JSON representation of one or more CVSS vectors
+	helpText := fmt.Sprintf(`CVSS Calculator version %s
+ - produces a JSON representation of one or more CVSS vectors
+ - supports CVSS2.0, CVSS3.0, CVSS3.1, CVSS4.0
+
 Usage:
-  %s [--help] <CVSS_vector1> [<CVSS_vector2> ...]
+  %s [--help|--version] <CVSS_vector1> [<CVSS_vector2> ...]
 
 Supported vector formats:
   CVSS:4.0/...
