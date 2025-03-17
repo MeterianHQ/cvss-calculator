@@ -22,27 +22,27 @@ type CvssResult struct {
 }
 
 func main() {
-	// If no argument or a help/version flag is provided, handle them.
+	// If no arguments provided, show help.
 	if len(os.Args) < 2 {
 		printHelp()
 		return
 	}
 
-	// Check for --help or --version flag
+	// Check for help or version flags in the first argument.
 	firstArg := os.Args[1]
-	if firstArg == "--help" {
+	if firstArg == "--help" || firstArg == "-h" {
 		printHelp()
 		return
 	}
-	if firstArg == "--version" {
+	if firstArg == "--version" || firstArg == "-v" {
 		fmt.Printf("CVSS Calculator version %s\n", version)
 		return
 	}
 
 	// Process each provided vector
 	for _, vector := range os.Args[1:] {
-		// Skip any help or version argument if accidentally included later
-		if vector == "--help" || vector == "--version" {
+		// Skip help/version flags if accidentally included later
+		if vector == "--help" || vector == "-h" || vector == "--version" || vector == "-v" {
 			continue
 		}
 
@@ -78,7 +78,7 @@ func printHelp() {
  - supports CVSS2.0, CVSS3.0, CVSS3.1, CVSS4.0
 
 Usage:
-  %s [--help|--version] <CVSS_vector1> [<CVSS_vector2> ...]
+  %s [--help|-h] [--version|-v] <CVSS_vector1> [<CVSS_vector2> ...]
 
 Supported vector formats:
   CVSS:4.0/...
@@ -87,7 +87,7 @@ Supported vector formats:
   AV:... (for CVSS v2)
 
 Example:
-  %s "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+  %s "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
 `, version, progName, progName)
 	fmt.Print(helpText)
 }
